@@ -63,8 +63,39 @@ public class ListSorter<T> {
 	 * @return
 	 */
 	public List<T> mergeSort(List<T> list, Comparator<T> comparator) {
-        // FILL THIS IN!
-        return null;
+      
+      if( list.size() <= 1 )
+      {
+         return list;
+      }
+
+      List<T> firstHalf = new ArrayList(list.subList(0, list.size() / 2));
+      List<T> secondHalf = new ArrayList(list.subList(list.size()/2, list.size()));
+    
+      firstHalf = mergeSort(firstHalf, comparator);
+      secondHalf = mergeSort(secondHalf, comparator);
+
+      //Merge Code
+      int firstIndex = 0;
+      int secondIndex = 0;
+
+      while( firstIndex < firstHalf.size() && secondIndex < secondHalf.size() ) {
+         if( comparator.compare(secondHalf.get(secondIndex), 
+            firstHalf.get(firstIndex)) < 0 ) {
+            
+            firstHalf.add(firstIndex, secondHalf.get(secondIndex) );
+            secondIndex++;
+         }
+
+         firstIndex++;
+      }
+
+      if( secondIndex < secondHalf.size() ) {
+         firstHalf.addAll( new ArrayList(secondHalf.subList( secondIndex, 
+            secondHalf.size() ) ) );
+      }
+      
+      return firstHalf;
 	}
 
 	/**
@@ -75,7 +106,18 @@ public class ListSorter<T> {
 	 * @return
 	 */
 	public void heapSort(List<T> list, Comparator<T> comparator) {
-        // FILL THIS IN!
+
+      PriorityQueue<T> heap = new PriorityQueue<T>(list.size(), comparator);
+      
+      for( int index = 0; index < list.size(); index++ ) {
+         heap.offer( list.get(index) );
+      }
+      
+      list.clear();
+      while( !(heap.isEmpty()) ) {
+         list.add(heap.poll());
+
+      }
 	}
 
 	
@@ -89,8 +131,14 @@ public class ListSorter<T> {
 	 * @return
 	 */
 	public List<T> topK(int k, List<T> list, Comparator<T> comparator) {
-        // FILL THIS IN!
-        return null;
+      
+      heapSort(list, comparator);
+      List<T> topKlist = new ArrayList<T>();
+
+      for( int index = list.size() - k; index < list.size(); index++ ) {
+         topKlist.add(list.get(index));
+      }
+      return topKlist;
 	}
 
 	
