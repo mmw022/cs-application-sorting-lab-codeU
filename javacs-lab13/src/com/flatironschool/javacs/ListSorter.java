@@ -131,13 +131,31 @@ public class ListSorter<T> {
 	 * @return
 	 */
 	public List<T> topK(int k, List<T> list, Comparator<T> comparator) {
-      
-      heapSort(list, comparator);
+     
+      PriorityQueue<T> heap = new PriorityQueue<T>(k, comparator);
+
+      for( int index = 0; index < list.size(); index++ ) {
+         
+         if( heap.size() < k ) {
+            heap.offer(list.get(index));
+            continue;
+         }
+
+         else {
+            if( comparator.compare( heap.peek(), list.get(index) ) < 0 ) {
+               heap.poll();
+               heap.offer(list.get(index));
+            }
+         }
+      }
+
       List<T> topKlist = new ArrayList<T>();
 
-      for( int index = list.size() - k; index < list.size(); index++ ) {
-         topKlist.add(list.get(index));
+      while( !(heap.isEmpty()) ) {
+         topKlist.add(heap.poll());
+
       }
+      
       return topKlist;
 	}
 
